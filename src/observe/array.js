@@ -8,7 +8,25 @@ export const arrayMethods = Object.create(oldArrayPrototype)
 
 // 属性的查找方式 先查找自己的 再去原型上去查找
 methods.forEach((m) => {
-  arrayMethods[m] = function () {
-    console.log(`${m} 方法被触发了`)
+  arrayMethods[m] = function (...args) {
+    oldArrayPrototype[m].call(this, ...args)
+
+    let inserted = []
+    switch (m) {
+      case 'push':
+      case 'unshift':
+        inserted = args
+        break
+      case 'splice':
+        inserted = args.slice(2)
+        break
+      default:
+        break
+    }
+
+    const ob = this.__ob__
+    if (ob) {
+      ob.observeArray(inserted)
+    }
   }
 })

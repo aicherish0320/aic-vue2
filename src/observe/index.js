@@ -8,8 +8,15 @@ import { arrayMethods } from './array.js'
  */
 class Observer {
   constructor(value) {
+    Object.defineProperty(value, '__ob__', {
+      enumerable: false,
+      value: this
+    })
+
     if (isArray(value)) {
       value.__proto__ = arrayMethods
+      // 数组递归处理
+      this.observeArray(value)
     } else {
       this.walk(value)
     }
@@ -18,6 +25,9 @@ class Observer {
     Object.keys(value).forEach((key) => {
       defineReactive(value, key, value[key])
     })
+  }
+  observeArray(data) {
+    data.forEach((item) => observe(item))
   }
 }
 /*
@@ -37,6 +47,7 @@ function defineReactive(obj, key, value) {
     },
     set(newVal) {
       if (newVal === value) return
+      observe(newVal)
       value = newVal
     }
   })
@@ -44,6 +55,8 @@ function defineReactive(obj, key, value) {
 
 export function observe(data) {
   if (!isObject(data)) return
+  // 已经被观测过了
+  if (data.__ob__) return
 
   // 对每一个对象进行观察
   return new Observer(data)
