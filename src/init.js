@@ -10,6 +10,14 @@ export function initMixin(Vue) {
 
     initState(vm)
 
+    // 程序运行到这里 数据已经被劫持了
+    // 数据变化需要更新视图 diff 算法更新需要更新的部分
+    // 在 vue 中视图使用 template
+    // vue3 中 template 写起来性能会更高一些 内部做了很多优化
+    // template -> ast 语法树（用来描述语法的）-> 描述成一个树结构 -> 将代码重组成 js 语法
+    // 模板编译原理（把 template 模板编译成 render 函数）-> 虚拟 DOM -> diff 算法比对虚拟 DOM
+    // ast -> render -> VNode -> 真实 DOM
+    // 更新的时候 再次调用 render -> 新的 VNode -> 新旧比对 -> 更新真实 DOM
     if (vm.$options.el) {
       // 挂载
       console.log('元素挂载')
