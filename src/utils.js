@@ -5,3 +5,7 @@ export function isFunction(value) {
 export function isObject(value) {
   return typeof value === 'object' && value !== null
 }
+
+export function isArray(value) {
+  return Array.isArray(value)
+}

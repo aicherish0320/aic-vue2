@@ -1,4 +1,5 @@
-import { isObject } from '../utils.js'
+import { isArray, isObject } from '../utils.js'
+import { arrayMethods } from './array.js'
 
 /**
  * Observer 类是依附在每个被观察对象
@@ -7,7 +8,11 @@ import { isObject } from '../utils.js'
  */
 class Observer {
   constructor(value) {
-    this.walk(value)
+    if (isArray(value)) {
+      value.__proto__ = arrayMethods
+    } else {
+      this.walk(value)
+    }
   }
   walk(value) {
     Object.keys(value).forEach((key) => {

@@ -14,25 +14,22 @@ function initData(vm) {
   let data = vm.$options.data
   data = vm._data = isFunction(data) ? data.call(vm) : data
 
-  proxyData(vm, '_data')
+  Object.keys(data).forEach((key) => {
+    proxy(vm, '_data', key)
+  })
 
   // 将 data 转换成响应式的
   // 观测数据
   observe(data)
-
-  console.log(data)
 }
 
-function proxyData(vm, source) {
-  const data = vm[source]
-  Object.keys(data).forEach((key) => {
-    Object.defineProperty(vm, key, {
-      get() {
-        return vm[source][key]
-      },
-      set(val) {
-        vm[data][key] = val
-      }
-    })
+function proxy(vm, source, key) {
+  Object.defineProperty(vm, key, {
+    get() {
+      return vm[source][key]
+    },
+    set(val) {
+      vm[source][key] = val
+    }
   })
 }
