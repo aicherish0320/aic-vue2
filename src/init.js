@@ -1,3 +1,4 @@
+import { compileToFunction } from './compiler/index'
 import { initState } from './state'
 
 export function initMixin(Vue) {
@@ -20,7 +21,23 @@ export function initMixin(Vue) {
     // 更新的时候 再次调用 render -> 新的 VNode -> 新旧比对 -> 更新真实 DOM
     if (vm.$options.el) {
       // 挂载
-      console.log('元素挂载')
+      vm.$mount(vm.$options.el)
+    }
+  }
+
+  Vue.prototype.$mount = function (el) {
+    const vm = this
+    const opts = vm.$options
+    el = document.querySelector(el)
+    vm.$el = el
+
+    if (!opts.render) {
+      let template = opts.template
+      if (!template) {
+        template = el.outerHTML
+      }
+      const render = compileToFunction(template)
+      opts.render = render
     }
   }
 }
