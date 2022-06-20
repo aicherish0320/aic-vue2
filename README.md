@@ -21,3 +21,11 @@ Rollup 是一个 JavaScript 模块打包器，可以将小块代码编译成大�
 ### Vue 的实现
 
 - Vue 是基于原型的模式去实现的，所有的功能都通过原型扩展的方式来添加
+
+- `Object.defineProperty` 方法会在一个对象上定义一个新的属性，或者修改现有的属性
+
+### new Vue
+
+- new Vue() 会先调用 `_init` 方法进行初始化
+- initState 处理 data，data 为函数、对象的情况
+- initData 将 data 进行响应式处理
