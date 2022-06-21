@@ -44,3 +44,10 @@ Rollup 是一个 JavaScript 模块打包器，可以将小块代码编译成大�
 
 - 每个对象都有一个 `__proto__`属性，它指向所属类的原型 `fn.__proto__ === Function.prototype`
 - 每个原型上都有一个 `constructor` 属性，指向函数本身 `Function.prototype.constructor === Function`
+
+## 依赖收集过程实现
+
+> 一个属性对应一个 dep，一个 dep 对应多个 watcher（因为一个属性可以在多个视图中被使用），一个 watcher 可以对应多个 dep（因为一个视图中可以有多个属性，就有多个 dep）
+
+- Dep：dep 是可以有多个指令订阅的可观察对象(A dep is an observable that can have multiple directives subscribing to it)
+- Watcher： A watcher parses an expression, collects dependencies,and fires callback when the expression value changes,This is used for both the $watch() api and directives
