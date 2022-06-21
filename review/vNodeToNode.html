@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>vNodeToNode</title>
+  </head>
+  <body>
+    <h1>虚拟 DOM 转换成真实 DOM</h1>
+    <div id="app">
+      <span>{{ message }}</span>
+      <p>{{ age }}</p>
+    </div>
+    <script>
+      const vNode = {
+        tag: 'div',
+        data: { id: 'app', style: { color: 'red', background: 'yellow' } },
+        children: [
+          {
+            tag: 'span',
+            data: undefined,
+            text: undefined,
+            children: [
+              {
+                tag: undefined,
+                data: undefined,
+                text: undefined,
+                text: 'hello'
+              }
+            ]
+          },
+          {
+            tag: 'p',
+            data: undefined,
+            text: undefined,
+            children: [
+              { tag: undefined, data: undefined, text: undefined, text: 25 }
+            ]
+          }
+        ],
+        text: undefined
+      }
+
+      function createElm(vNode) {
+        const { tag, data, children, text } = vNode
+        if (typeof tag === 'string') {
+          const elm = (vNode.el = document.createElement(tag))
+
+          children.forEach((child) => elm.appendChild(createElm(child)))
+        } else {
+          vNode.el = document.createTextNode(text)
+        }
+
+        return vNode.el
+      }
+
+      const elm = createElm(vNode)
+      const parentNode = app.parentNode
+      parentNode.insertBefore(elm, app.nextSibling)
+      parentNode.removeChild(app)
+    </script>
+  </body>
+</html>

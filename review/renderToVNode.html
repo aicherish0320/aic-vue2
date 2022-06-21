@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>renderToVNode</title>
+  </head>
+  <body>
+    <h1>render 函数返回 VNode</h1>
+    <script>
+      const renderStr = `_c('div',{id: "app",style: {"color":"red","background":"yellow"}},_c('span',undefined,_v(_s(message))),_c('p',undefined,_v(_s(age))))`
+
+      const render = new Function(`with(this){ return ${renderStr} }`)
+
+      const vm = {
+        message: 'hello',
+        age: 25
+      }
+
+      vm._c = function (tag, data, ...children) {
+        return createElement(tag, data, children)
+      }
+      vm._v = function (text) {
+        return createText(text)
+      }
+      vm._s = function (value) {
+        if (typeof value === 'object') {
+          return JSON.stringify(value)
+        }
+        return value
+      }
+
+      function VNode(tag, data, children, text) {
+        return {
+          tag,
+          data,
+          children,
+          text
+        }
+      }
+      function createElement(tag, data, children) {
+        return VNode(tag, data, children, undefined)
+      }
+      function createText(text) {
+        return VNode(undefined, undefined, undefined, text)
+      }
+
+      const vNode = render.call(vm)
+      console.log('vNode >>> ', vNode)
+    </script>
+  </body>
+</html>
