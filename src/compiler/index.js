@@ -10,5 +10,6 @@ export function compileToFunction(template) {
   const render = new Function(`with(this){return ${code} }`)
   console.log('ast >>> ', ast)
   console.log('code >>> ', code)
-  console.log('render >>> ', render.toString())
+
+  return render
 }
