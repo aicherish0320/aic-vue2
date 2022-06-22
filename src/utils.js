@@ -24,3 +24,43 @@ export function nextTick(fn) {
     waiting = true
   }
 }
+
+const strategy = {}
+const lifecycle = ['beforeCreate', 'created', 'beforeMount', 'mounted']
+lifecycle.forEach((hook) => {
+  strategy[hook] = function (parentVal, childVal) {
+    if (childVal) {
+      if (parentVal) {
+        return parentVal.concat(childVal)
+      } else {
+        return [].concat(childVal)
+      }
+    } else {
+      return parentVal
+    }
+  }
+})
+
+export function mergeOptions(parent, child) {
+  const options = {}
+
+  for (const key in parent) {
+    mergeField(key)
+  }
+
+  for (const key in child) {
+    if (!parent.hasOwnProperty(key)) {
+      mergeField(key)
+    }
+  }
+
+  function mergeField(key) {
+    if (strategy[key]) {
+      options[key] = strategy[key](parent[key], child[key])
+    } else {
+      options[key] = child[key] || parent[key]
+    }
+  }
+
+  return options
+}
