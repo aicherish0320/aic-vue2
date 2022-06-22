@@ -1,4 +1,5 @@
 import Dep from './dep'
+import { queueWatcher } from './scheduler'
 
 let id = 0
 class Watcher {
@@ -33,6 +34,19 @@ class Watcher {
     }
   }
   update() {
+    queueWatcher(this)
+    // this.get()
+    // console.log('update')
+    // if (this.timer) {
+    //   return
+    // }
+    // this.timer = setTimeout(() => {
+    //   this.timer = null
+    //   console.log('update')
+    //   this.get()
+    // }, 0)
+  }
+  run() {
     this.get()
   }
 }
