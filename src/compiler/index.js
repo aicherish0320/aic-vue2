@@ -8,8 +8,6 @@ export function compileToFunction(template) {
   // 代码生成
   const code = generate(ast)
   const render = new Function(`with(this){return ${code} }`)
-  console.log('ast >>> ', ast)
-  console.log('code >>> ', code)
 
   return render
 }

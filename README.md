@@ -47,7 +47,9 @@ Rollup 是一个 JavaScript 模块打包器，可以将小块代码编译成大�
 
 ## 依赖收集过程实现
 
+> 观察者模式，数据一变，视图自动更新。发布订阅模式是被动的，需要手动触发更新、手动监听
+
 > 一个属性对应一个 dep，一个 dep 对应多个 watcher（因为一个属性可以在多个视图中被使用），一个 watcher 可以对应多个 dep（因为一个视图中可以有多个属性，就有多个 dep）
 
 - Dep：dep 是可以有多个指令订阅的可观察对象(A dep is an observable that can have multiple directives subscribing to it)
-- Watcher： A watcher parses an expression, collects dependencies,and fires callback when the expression value changes,This is used for both the $watch() api and directives
+- Watcher： watcher 可以解析表达式，收集依赖，并且当表达式的值改变时触发回调函数 (A watcher parses an expression, collects dependencies,and fires callback when the expression value changes,This is used for both the $watch() api and directives)

@@ -1,5 +1,6 @@
 import { isArray, isObject } from '../utils.js'
 import { arrayMethods } from './array.js'
+import Dep from './dep.js'
 
 /**
  * Observer 类是依附在每个被观察对象
@@ -41,14 +42,19 @@ class Observer {
 function defineReactive(obj, key, value) {
   observe(value)
 
+  const dep = new Dep()
+
   Object.defineProperty(obj, key, {
     get() {
+      Dep.target && dep.depend()
       return value
     },
     set(newVal) {
       if (newVal === value) return
       observe(newVal)
       value = newVal
+
+      dep.notify()
     }
   })
 }
