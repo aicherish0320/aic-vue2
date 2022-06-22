@@ -33,7 +33,11 @@ lifecycle.forEach((hook) => {
       if (parentVal) {
         return parentVal.concat(childVal)
       } else {
-        return [].concat(childVal)
+        if (isArray(childVal)) {
+          return childVal
+        } else {
+          return [].concat(childVal)
+        }
       }
     } else {
       return parentVal
