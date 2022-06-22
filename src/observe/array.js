@@ -27,6 +27,8 @@ methods.forEach((m) => {
     const ob = this.__ob__
     if (ob) {
       ob.observeArray(inserted)
+
+      ob.dep.notify()
     }
   }
 })

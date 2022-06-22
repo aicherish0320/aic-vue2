@@ -9,6 +9,8 @@ import Dep from './dep.js'
  */
 class Observer {
   constructor(value) {
+    this.dep = new Dep()
+    // value 是对象和数组
     Object.defineProperty(value, '__ob__', {
       enumerable: false,
       value: this
@@ -31,6 +33,18 @@ class Observer {
     data.forEach((item) => observe(item))
   }
 }
+// 让数组里面的引用类型都收集依赖
+function dependArray(value) {
+  for (let i = 0; i < value.length; i++) {
+    const current = value[i]
+    current.__ob__ && current.__ob__.dep.depend()
+
+    if (isArray(current)) {
+      dependArray(current)
+    }
+  }
+}
+
 /*
   Vue2 应用了 defineProperty 需要一加载的时候，就进行递归操作。
   性能优化的原则：
@@ -39,14 +53,35 @@ class Observer {
   3. 不要频繁的获取数据
   4. 如果数据不需要响应式，可以使用 Object.freeze 冻结属性
 */
+/*
+  data: {
+    arr: [1, 2, 3]
+    c: { a: 1 }
+  }
+  在取值 arr 的时候，会让 [1, 2, 3] 进行依赖收集
+  在取值 c 的时候，会让 { a: 1 } 进行依赖收集
+*/
 function defineReactive(obj, key, value) {
-  observe(value)
+  // childOb 如果有值的话 那么就是数组或者对象
+  const childOb = observe(value)
 
   const dep = new Dep()
 
   Object.defineProperty(obj, key, {
     get() {
-      Dep.target && dep.depend()
+      if (Dep.target) {
+        dep.depend()
+
+        if (childOb) {
+          childOb.dep.depend()
+
+          // [[[]]] 数组套数组的情况
+          if (isArray(value)) {
+            dependArray(value)
+          }
+        }
+      }
+
       return value
     },
     set(newVal) {
