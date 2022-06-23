@@ -53,3 +53,13 @@ Rollup 是一个 JavaScript 模块打包器，可以将小块代码编译成大�
 
 - Dep：dep 是可以有多个指令订阅的可观察对象(A dep is an observable that can have multiple directives subscribing to it)
 - Watcher： watcher 可以解析表达式，收集依赖，并且当表达式的值改变时触发回调函数 (A watcher parses an expression, collects dependencies,and fires callback when the expression value changes,This is used for both the $watch() api and directives)
+
+## 数据响应式原理分析（从三个对象的角度去讨论）
+
+- Observer：Observer 类 是依附在每一个可被观测到对，一旦被吸附了，observer 就将目标对象的 key 转换成 getter/setter，目的是为了依赖收集和触发更新
+- Dep：dep 能被多个指令订阅
+- Watcher：watcher 能够转换表达式，收集依赖，并且在表达式发生改变时去触发回调函数。
+
+> Vue 中使用 **Object.defineProperty** 结合**观察者模式**进行响应式处理，数据变化会自动更新视图。在初始化渲染的时候，会有一个 渲染 Watcher，执行在编译阶段生成的 render 函数，在执行 render 函数时，会去获取数据，会触发 data 的 get 方法，在 initStat 的时候，会递归遍历每一个对象的 key，并且每一个 key 都对应一个 dep，存储在当前 key 的闭包中，dep 中的作用就是收集当前 key 所依赖的视图，也就是 watcher
+> 在 Vue 中是组件级更新，一个组件对应一个 watcher。当数据发生变化时，调用 dep 中收集的 watcher 进行更新视图
+> 每个属性都对应一个 dep，收集当前 key 所依赖的视图（watcher）；一个 watcher 也对应多个 dep，一个视图中存在多个属性
