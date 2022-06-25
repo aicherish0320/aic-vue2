@@ -22,6 +22,77 @@ export function patch(oldVNode, vNode) {
     }
     // 元素
     updateProperties(vNode, oldVNode.data)
+
+    // 孩子比较
+    const newChildren = vNode.children || []
+    const oldChildren = oldVNode.children || []
+
+    if (!newChildren.length && oldChildren.length) {
+      el.innerHTML = ''
+    } else if (newChildren.length && !oldChildren.length) {
+      newChildren.forEach((item) => el.appendChild(createElm(item)))
+    } else {
+      updateChildren(el, oldChildren, newChildren)
+    }
+  }
+}
+
+// diff 算法
+function updateChildren(el, oldChildren, newChildren) {
+  let oldStartIndex = 0
+  let oldStartVNode = oldChildren[oldStartIndex]
+  let oldEndIndex = oldChildren.length - 1
+  let oldEndVNode = oldChildren[oldEndIndex]
+  let newStartIndex = 0
+  let newStartVNode = newChildren[newStartIndex]
+  let newEndIndex = newChildren.length - 1
+  let newEndVNode = newChildren[newEndIndex]
+
+  while (oldStartIndex <= oldEndIndex && newStartIndex <= newEndIndex) {
+    if (isSameVNode(oldStartVNode, newStartVNode)) {
+      patch(oldStartVNode, newStartVNode)
+
+      oldStartVNode = oldChildren[++oldStartIndex]
+      newStartVNode = newChildren[++newStartIndex]
+    } else if (isSameVNode(oldEndVNode, newEndVNode)) {
+      patch(oldEndVNode, newEndVNode)
+
+      oldEndVNode = oldChildren[--oldEndIndex]
+      newEndVNode = newChildren[--newEndIndex]
+    } else if (isSameVNode(oldStartVNode, newEndVNode)) {
+      patch(oldStartVNode, newEndVNode)
+
+      el.insertBefore(oldStartVNode.el, oldEndVNode.el.nextSibling)
+
+      oldStartVNode = oldChildren[++oldStartIndex]
+      newEndVNode = newChildren[--newEndIndex]
+    } else if (isSameVNode(oldEndVNode, newStartVNode)) {
+      patch(oldEndVNode, newStartVNode)
+
+      el.insertBefore(oldEndVNode.el, oldStartVNode.el)
+
+      oldEndVNode = oldChildren[--oldEndIndex]
+      newStartVNode = newChildren[++newStartIndex]
+    }
+  }
+
+  // 老的结束了 老的少 新的多
+  if (newStartIndex <= newEndIndex) {
+    // 有一种情况 从尾部开始比较 不能直接追加
+    const anchor = newChildren[newEndIndex + 1]
+      ? newChildren[newEndIndex + 1].el
+      : null
+    for (let i = newStartIndex; i <= newEndIndex; i++) {
+      // anchor 值如果是 null 的话相当于 appendChild
+      el.insertBefore(createElm(newChildren[i]), anchor)
+    }
+  }
+
+  // 新的结束了 老的多 新的少
+  if (oldStartIndex <= oldEndIndex) {
+    for (let i = oldStartIndex; i <= oldEndIndex; i++) {
+      el.removeChild(oldChildren[i].el)
+    }
   }
 }
 
