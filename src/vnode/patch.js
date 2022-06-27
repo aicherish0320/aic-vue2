@@ -34,6 +34,7 @@ export function patch(oldVNode, vNode) {
     } else {
       updateChildren(el, oldChildren, newChildren)
     }
+    return el
   }
 }
 

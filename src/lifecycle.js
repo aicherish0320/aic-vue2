@@ -25,9 +25,15 @@ export function lifeMixin(Vue) {
   Vue.prototype._update = function (vNode) {
     // 先序深度遍历
     const vm = this
+    const preVNode = vm._vNode
     // 初始渲染是根据虚拟节点生成真实节点 替换点老节点
     // 更新过程中渲染，是新旧虚拟节点 进行比对 局部更新视图
-    vm.$el = patch(vm.$el, vNode)
+    if (!preVNode) {
+      vm.$el = patch(vm.$el, vNode)
+    } else {
+      vm.$el = patch(preVNode, vNode)
+    }
+    vm._vNode = vNode
   }
 }
 
