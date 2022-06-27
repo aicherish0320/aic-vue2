@@ -22,10 +22,9 @@ const vm1 = new Vue({
   }
 })
 const render1 = compileToFunction(`<ul>
-  <li key="F">F</li>
+  <li key="C">C</li>
   <li key="A">A</li>
   <li key="B">B</li>
-  <li key="C">C</li>
   <li key="D">D</li>
 </ul>`)
 const oldVNode = render1.call(vm1)
@@ -40,9 +39,9 @@ const vm2 = new Vue({
   }
 })
 const render2 = compileToFunction(`<ul>
-  <li key="D">D</li>
-  <li key="C">C</li>
   <li key="B">B</li>
+  <li key="C">C</li>
+  <li key="D">D</li>
   <li key="A">A</li>
 </ul>`)
 const vNode = render2.call(vm2)
@@ -51,6 +50,6 @@ setTimeout(() => {
   patch(oldVNode, vNode)
   // document.body.removeChild(el1)
   // document.body.appendChild(el2)
-}, 2000)
+}, 4000)
 
 export default Vue

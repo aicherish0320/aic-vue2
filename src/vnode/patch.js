@@ -37,6 +37,13 @@ export function patch(oldVNode, vNode) {
   }
 }
 
+/*
+  dom 的生成 ast -> render 方法 -> 虚拟节点 -> 真实 dom
+  更新时需要重新创建 ast 语法树嘛
+  如果动态添加了节点，（绕过 vue 添加的，vue 监控不到）难道不需要重新生成 ast 嘛
+  后续数据变了，只会操作自己管理的 dom 元素
+*/
+
 // diff 算法
 function updateChildren(el, oldChildren, newChildren) {
   let oldStartIndex = 0
@@ -48,7 +55,24 @@ function updateChildren(el, oldChildren, newChildren) {
   let newEndIndex = newChildren.length - 1
   let newEndVNode = newChildren[newEndIndex]
 
+  const makeIndexByKey = (children) => {
+    return children.reduce((memo, current, index) => {
+      if (memo[current.key]) {
+        memo[current.key] = index
+      }
+      return memo
+    }, {})
+  }
+  const keysMap = makeIndexByKey(oldChildren)
+
   while (oldStartIndex <= oldEndIndex && newStartIndex <= newEndIndex) {
+    // null 处理
+    if (!oldStartVNode) {
+      oldStartVNode = oldChildren[++oldStartIndex]
+    } else if (!oldEndVNode) {
+      oldEndVNode = oldChildren[--oldEndIndex]
+    }
+
     if (isSameVNode(oldStartVNode, newStartVNode)) {
       patch(oldStartVNode, newStartVNode)
 
@@ -73,6 +97,20 @@ function updateChildren(el, oldChildren, newChildren) {
 
       oldEndVNode = oldChildren[--oldEndIndex]
       newStartVNode = newChildren[++newStartIndex]
+    } else {
+      let moveIndex = keysMap[newStartVNode.key]
+      if (!moveIndex) {
+        el.insertBefore(createElm(newStartVNode), oldStartVNode.el)
+      } else {
+        const moveNode = oldChildren[moveIndex]
+        oldChildren[moveIndex] = null
+
+        el.insertBefore(moveNode.el, oldStartVNode.el)
+
+        patch(moveNode, newStartVNode)
+      }
+
+      newStartVNode = newChildren[++newStartIndex]
     }
   }
 
@@ -91,7 +129,9 @@ function updateChildren(el, oldChildren, newChildren) {
   // 新的结束了 老的多 新的少
   if (oldStartIndex <= oldEndIndex) {
     for (let i = oldStartIndex; i <= oldEndIndex; i++) {
-      el.removeChild(oldChildren[i].el)
+      if (oldChildren[i].el) {
+        el.removeChild(oldChildren[i].el)
+      }
     }
   }
 }
