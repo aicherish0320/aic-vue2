@@ -71,3 +71,10 @@
 - 当宏任务执行完，就到达了检查点，会先将执行期间所产生的所有微任务都执行完再去进行渲染
 - 微任务是由 V8 引擎控制的，在创建全局执行上下文的时候，也会在 V8 引擎内部创建一个微任务队列
 - 微任务：process.nextTick Promise Object.observe MutationObserver
+
+## MutationObserver
+
+- MutationObserver 创建并返回一个新的 MutationObserver，它会在指定的 DOM 发生变化时被调用
+- MutationObserver 采用了异步 + 微任务的方案
+- 异步是为了提升同步操作带来的性能问题
+- 微任务是为了解决实时响应的问题
