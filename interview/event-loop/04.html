@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button id="btn">Click</button>
+  </body>
+  <script>
+    const btn = document.getElementById('btn')
+
+    btn.addEventListener('click', () => {
+      Promise.resolve().then(() => {
+        console.log('M1')
+      })
+      console.log('l1')
+    })
+
+    btn.addEventListener('click', () => {
+      Promise.resolve().then(() => {
+        console.log('M2')
+      })
+      console.log('l2')
+    })
+    // 这样触发 和 点击按钮触发打印的结果不一样
+    btn.click()
+
+    /*
+      什么时候进入检查点 清空微任务 当前调用栈清空的时候（主调用栈为空的时候）
+    */
+  </script>
+</html>
