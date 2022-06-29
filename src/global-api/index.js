@@ -26,7 +26,7 @@ export function initGlobalAPI(Vue) {
     // Sub.prototype.__proto__ = Super.prototype
     Sub.prototype = Object.create(Super.prototype)
     Sub.prototype.constructor = Sub
-    // Sub.options = mergeOptions(Super.options, opt)
+    Sub.options = mergeOptions(Super.options, opt)
 
     // Sub.mixin = Super.mixin
 
@@ -42,8 +42,6 @@ export function initGlobalAPI(Vue) {
     }
 
     Vue.options.components[name] = definition
-
-    console.log('Vue.options.components >>> ', Vue.options.components)
   }
 
   Vue.filter = function () {}

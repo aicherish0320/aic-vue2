@@ -1,6 +1,11 @@
 import { isSameVNode } from './index'
 
 export function patch(oldVNode, vNode) {
+  // 组件的挂在流程
+  if (!oldVNode) {
+    return createElm(vNode)
+  }
+
   const isRealElement = oldVNode.nodeType
   if (isRealElement) {
     const elm = createElm(vNode)
@@ -137,11 +142,25 @@ function updateChildren(el, oldChildren, newChildren) {
   }
 }
 
+function createComponent(vNode) {
+  let i = vNode.data
+  if ((i = i.hook) && (i = i.init)) {
+    i(vNode)
+  }
+  if (vNode.componentInstance) {
+    return true
+  }
+}
+
 export function createElm(vNode) {
   const { tag, data, children, text, vm } = vNode
   if (text) {
     vNode.el = document.createTextNode(text)
   } else {
+    if (createComponent(vNode)) {
+      return vNode.componentInstance.$el
+    }
+
     // 虚拟节点和真实节点做一个映射关系
     // 后续某个虚拟节点更新了，可以跟踪到真实节点，并且更新真实节点
     vNode.el = document.createElement(tag)

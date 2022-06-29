@@ -20,7 +20,12 @@ function createComponent(vm, tag, data, children, key, Ctor) {
 
   data.hook = {
     //组件的生命周期
-    init() {},
+    init(vNode) {
+      const child = (vNode.componentInstance = new Ctor({}))
+
+      child.$mount()
+      // mount 挂在完毕后，会产生一个真实节点，在这个节点上 vm.$el -> 对应的是组件的真实内容
+    },
     prepatch() {}
   }
 
@@ -29,7 +34,7 @@ function createComponent(vm, tag, data, children, key, Ctor) {
     children,
     tag
   })
-  debugger
+
   return componentVNode
 }
 

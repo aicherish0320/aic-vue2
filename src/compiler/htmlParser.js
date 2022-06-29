@@ -7,6 +7,7 @@ const attribute =
 const startTagClose = /^\s*(\/?)>/
 
 export function parserHTML(html) {
+  html = html.trim()
   // 构建父子关系
   // 使用 stack 型结构
   const stack = []
