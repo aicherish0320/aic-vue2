@@ -8,7 +8,6 @@ export function initMixin(Vue) {
   // 子组件也可以调用 _init 方法进行组件的初始化
   Vue.prototype._init = function (options) {
     const vm = this
-
     vm.$options = mergeOptions(vm.constructor.options, options)
 
     initState(vm)

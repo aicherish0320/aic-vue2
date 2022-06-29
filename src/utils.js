@@ -27,6 +27,7 @@ export function nextTick(fn) {
 
 const strategy = {}
 const lifecycle = ['beforeCreate', 'created', 'beforeMount', 'mounted']
+// 生命周期合并策略
 lifecycle.forEach((hook) => {
   strategy[hook] = function (parentVal, childVal) {
     if (childVal) {
@@ -44,6 +45,16 @@ lifecycle.forEach((hook) => {
     }
   }
 })
+// 组件合并策略
+strategy.components = function (parentVal, childVal) {
+  const ret = Object.create(parentVal)
+
+  for (const key in childVal) {
+    ret[key] = childVal[key]
+  }
+
+  return ret
+}
 
 export function mergeOptions(parent, child) {
   const options = {}
@@ -67,4 +78,31 @@ export function mergeOptions(parent, child) {
   }
 
   return options
+}
+
+export const isReserverTag = (tag) => {
+  return [
+    'html',
+    'body',
+    'div',
+    'p',
+    'h1',
+    'h2',
+    'h3',
+    'h4',
+    'h5',
+    'h6',
+    'a',
+    'button',
+    'section',
+    'b',
+    'i',
+    'span',
+    'ul',
+    'li',
+    'style',
+    'canvas',
+    'img',
+    'input'
+  ].includes(tag)
 }

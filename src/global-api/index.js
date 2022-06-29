@@ -8,6 +8,8 @@ export function initGlobalAPI(Vue) {
     return this
   }
 
+  Vue.options._base = Vue
+
   Vue.options.components = {}
 
   Vue.extend = function (opt) {
@@ -20,10 +22,13 @@ export function initGlobalAPI(Vue) {
     //   Fn.prototype = parentPrototype
     //   return new Fn()
     // }
+    // Object.create 方法创建一个新对象，使用现有的对象来作为新创建对象的原型
     // Sub.prototype.__proto__ = Super.prototype
     Sub.prototype = Object.create(Super.prototype)
     Sub.prototype.constructor = Sub
-    Sub.options = mergeOptions(Super.options, opt)
+    // Sub.options = mergeOptions(Super.options, opt)
+
+    // Sub.mixin = Super.mixin
 
     return Sub
   }
@@ -37,6 +42,8 @@ export function initGlobalAPI(Vue) {
     }
 
     Vue.options.components[name] = definition
+
+    console.log('Vue.options.components >>> ', Vue.options.components)
   }
 
   Vue.filter = function () {}
