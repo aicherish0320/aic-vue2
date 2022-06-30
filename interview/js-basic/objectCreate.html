@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Object.create 实现</title>
+  </head>
+  <body></body>
+  <script>
+    // const proto = { a: 1 }
+
+    // function objectCreate(proto) {
+    //   const Fn = function () {}
+    //   const instance = new Fn()
+    //   instance.__proto__ = proto
+    //   return instance
+    // }
+
+    // const obj = objectCreate(proto)
+    // console.log(obj.constructor)
+  </script>
+  <script>
+    function Sub() {}
+    function Super() {}
+    Super.prototype.hello = function () {}
+
+    Sub.prototype = Object.create(Super.prototype)
+    Sub.prototype.constructor = Sub
+
+    const sub = new Sub()
+    console.log(sub.constructor)
+
+    // console.log(sub.__proto__ === Sub.prototype)
+    // console.log(Sub.__proto__ === Function.prototype)
+  </script>
+</html>
