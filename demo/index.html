@@ -7,35 +7,21 @@
     <title>Demo</title>
   </head>
   <body>
-    <div id="app1">
-      <ac-button></ac-button>
-      <ac-comp></ac-comp>
-    </div>
-    <div id="app2">
-      <ac-button></ac-button>
-      <!-- <ac-comp></ac-comp> -->
-    </div>
+    <div id="app"></div>
 
     <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.14/vue.js"></script>
-
     <script>
-      Vue.component('ac-button', {
-        template: `
-          <button>Click</button>
-        `
-      })
-
-      const vm1 = new Vue({
-        el: '#app1',
-        components: {
-          'ac-comp': {
-            template: `
-              <h3>Click1</h3>
-            `
+      const MyButton = Vue.extend({
+        template: `<button>Click</button>`,
+        data() {
+          return {
+            msg: 'msg'
           }
         }
       })
-      const vm2 = new Vue({ el: '#app2' })
+      new MyButton({ template: `<button>你点我呀！！！</button>` }).$mount(
+        '#app'
+      )
     </script>
   </body>
 </html>
