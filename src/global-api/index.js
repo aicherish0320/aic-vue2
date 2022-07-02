@@ -9,7 +9,6 @@ export function initGlobalAPI(Vue) {
     this.options = mergeOptions(this.options, options)
     return this
   }
-
   Vue.options._base = Vue
 
   Vue.options.components = {}
