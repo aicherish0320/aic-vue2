@@ -1,9 +1,24 @@
 export const VueLazyLoad = {
-  install(Vue) {
+  install(Vue, userOptions) {
+    const lazyClass = lazy(Vue)
+    const instance = new LazyClass(userOptions)
     Vue.directive('lazy', {
-      bind() {},
-      unbind() {}
+      bind: instance.add.bind(instance),
+      unbind: instance.unbind.bind(instance)
     })
+  }
+}
+
+function lazy(Vue) {
+  return class LazyClass {
+    constructor(userOptions) {
+      this.userOptions = userOptions
+    }
+    // es6 中类的原型方法如果单独拿出来使用，this 会指向 undefined
+    add(el, dirs, vNode) {
+      // 获取滚动元素
+    }
+    unbind() {}
   }
 }
 
