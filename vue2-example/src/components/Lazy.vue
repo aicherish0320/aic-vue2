@@ -30,8 +30,13 @@ export default {
   width: 400px;
   height: 400px;
   overflow-y: scroll;
+  border: 1px solid red;
+  li {
+    height: 120px;
+  }
   img {
-    width: 100px;
+    width: 160px;
+    height: 100%;
   }
 }
 </style>
