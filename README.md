@@ -84,3 +84,28 @@ key 尽量不要用索引，会导致 diff 更新的时候，重新创建子元�
 - 异步组件
 - 组件 通信方式
 - keep-alive 的原理
+
+## 组件通信
+
+> 组件的渲染是先父后子
+
+```Vue
+  <App @fn="handler"></App>
+  <!--
+    将解析这个模板，将 fn 放在 listeners 上，最终循环 listeners 给当前的组件增加 listeners
+    handler 是属于父组件的
+
+    app.$on('fn') app.$emit('fn')
+   -->
+```
+
+```vue
+<my-button></my-button>
+->
+<button>点我</button>
+```
+
+`vm._vNode：<button></button>` 的虚拟节点
+`vm.$vNode：<my-button></my-button> `虚拟节点
+
+### 数据响应式原理、组件渲染原理、diff 算法、组件渲染机制整体流程
